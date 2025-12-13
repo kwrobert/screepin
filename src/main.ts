@@ -32,6 +32,20 @@ declare const global: {
 export const loop = ErrorMapper.wrapLoop(() => {
   console.log(`Current game tick is ${Game.time}`);
 
+  var harvester_target = 2;
+
+  var role_map: Record<string, number> = {"harvester": 0};
+  for (const creep_name in Game.creeps) {
+    var creep = Game.creeps[creep_name]
+    if (creep.memory.role in role_map){
+      role_map[creep.memory.role] = role_map[creep.memory.role] + 1
+    } else {
+      role_map[creep.memory.role] = 1
+    }
+  }
+
+
+
   // Automatically delete memory of missing creeps
   for (const name in Memory.creeps) {
     if (!(name in Game.creeps)) {
