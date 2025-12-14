@@ -39,10 +39,15 @@ class RoleHarvester extends CreepRoleBase {
       }
     }
     else {
-      let targets = find_loadable_structures(this.creep.room)
-      if (targets.length > 0) {
-        if (this.creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-          this.creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
+      let loadable_structs = find_loadable_structures(this.creep.room)
+      if (loadable_structs.length > 0) {
+        if (this.creep.transfer(loadable_structs[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+          this.creep.moveTo(loadable_structs[0], { visualizePathStyle: { stroke: '#ffffff' } });
+        }
+      } else if (this.creep.room.controller !== undefined) {
+        if (this.creep.upgradeController(this.creep.room.controller) == ERR_NOT_IN_RANGE) {
+          console.log("UPGRADING CONTROLLER")
+          this.creep.moveTo(this.creep.room.controller, { visualizePathStyle: { stroke: '#ffffff' } });
         }
       }
     }
@@ -68,7 +73,7 @@ function get_role_counts(): Record<string, number> {
     console.log("Creep memory:")
     console.log(creep.memory)
     let creep_role = creep.memory.role
-    if ( creep_role in role_counts) {
+    if (creep_role in role_counts) {
       console.log(`Found creep with expected creep role ${creep_role}`)
       role_counts[creep.memory.role] = role_counts[creep.memory.role] + 1
     } else {
