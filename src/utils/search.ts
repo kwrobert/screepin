@@ -37,3 +37,5 @@ function find_loadable_structures(room: Room): Array<Structure> {
   });
   return targets
 }
+
+export {find_active_sources_by_distance, find_loadable_structures };

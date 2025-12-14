@@ -19,6 +19,7 @@
     "watch-season": "rollup -cw --environment DEST:season",
     "watch-sim": "rollup -cw --environment DEST:sim"
   },
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/screepers/screeps-typescript-starter.git"
@@ -63,3 +64,4 @@
     "source-map": "~0.6.1"
   }
 }
+

@@ -1,3 +1,5 @@
+/// <reference path="../../src/types.d.ts" />
+
 export const Game: {
   creeps: { [name: string]: any };
   rooms: any;
