@@ -40,7 +40,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   spawn_actors.forEach(actor => {
     console.log(`State: ${actor.getSnapshot().value}`)
-    if (Game.time > 20) {
+    if (Game.time == 10) {
       actor.send({ type: "spawn" , body_config: [WORK, CARRY, MOVE], creep_name: "test-creep" })
       console.log("Log after send")
       console.log(`State: ${actor.getSnapshot().value}`)
