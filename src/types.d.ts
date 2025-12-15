@@ -9,6 +9,7 @@ declare global {
   interface Memory {
     uuid: number;
     log: any;
+    spawn_states: any
   }
 }
 
