@@ -51,6 +51,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
   console.log("Storing memory")
 
   if (!Memory.spawn_states){
+    console.log("Memory empty! Initializaing")
     Memory.spawn_states = {}
   }
   spawn_actors.forEach(actor => {

@@ -1,4 +1,4 @@
-import { setup, createActor, fromPromise } from 'xstate'
+import { setup, fromPromise } from 'xstate'
 
 type BodyConfig = Array<BodyPartConstant>
 
@@ -24,13 +24,13 @@ export const SpawnControllerMachine = setup({
     },
   },
   actors: {
-    SpawnAwaiter: fromPromise(async () => {
-      console.log("Inside promise awaiting spawn completion")
-      for (let i = 0; i < 5; i++) {
+    SpawnAwaiter: fromPromise(async ({ input }: { input: { spawn_id: string } }) => {
+      let spawn = Game.spawns[input.spawn_id]
+      while (spawn.spawning){
+        console.log(`Ticks remaining on spawn: ${spawn.spawning.remainingTime}`)
         await new Promise(resolve => setTimeout(resolve, 100));
-        console.log(i);
       }
-      console.log("Leaving promise")
+      console.log("Spawn complete!")
     })
   },
 }).createMachine({
@@ -45,11 +45,13 @@ export const SpawnControllerMachine = setup({
         spawn: {
           target: "Spawning",
           actions: [
-            { type: "spawnCreep", params: ({context, event}) => ({
-              spawn_id: context.spawn_id,
-              body_config: event.body_config,
-              creep_name: event.creep_name
-            })}
+            {
+              type: "spawnCreep", params: ({ context, event }) => ({
+                spawn_id: context.spawn_id,
+                body_config: event.body_config,
+                creep_name: event.creep_name
+              })
+            }
           ]
         }
       }
@@ -57,13 +59,11 @@ export const SpawnControllerMachine = setup({
     Spawning: {
       invoke: {
         id: "SpawnAwaiter",
-        input: {
-          spawn: "test"
-        },
+        src: "SpawnAwaiter",
+        input: ({ context }) => ({ spawn_id: context.spawn_id }),
         onDone: {
           target: "Idle"
         },
-        src: "SpawnAwaiter"
       }
     }
   }
